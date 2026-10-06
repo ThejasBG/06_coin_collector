@@ -1,127 +1,234 @@
-# Coin Collector Lab
+# Coin Collector
 
-This project is a single-topic top-down Coin Collector game using
-**Pygame**. It introduces students to per-frame collision bookkeeping,
-entity variety, an obstacle/lives system, and round timing, using a
-small, readable object-oriented codebase.
+A simple top-down Coin Collector game built with **Python and Pygame**. The player moves around the play area, collects different types of coins, avoids obstacles, and tries to achieve the highest possible score before the round ends.
 
----
+## Features
 
-## What's Provided
+### 🪙 Coin Collection
 
-A working Coin Collector game with:
+- Coins are collected when the player touches them.
+- Each coin can only be collected **once**.
+- Collected coins are removed from the play area immediately.
+- The game contains three different coin types:
 
-- A player that moves around a play area with the arrow keys
-- Coins scattered around the play area that award points on contact
-- A running score display
+| Coin Type | Value |
+|---|---:|
+| Bronze | 1 point |
+| Silver | 3 points |
+| Gold | 5 points |
 
-It has **one deliberate bug** and **three features** left for you to
-build. You are expected to **analyze**, **interact with an AI
-assistant**, and **complete/fix** the game to make it fully functional
-and more interesting.
+Each coin type has a different color so that they can be distinguished visually.
 
-### **Use an LLM (e.g. ChatGPT or Claude) as your debugging and pair-programming partner for this lab.**
+### 🚧 Obstacles
 
----
+- Obstacles are randomly placed within the play area.
+- The player must avoid obstacles while collecting coins.
+- Colliding with an obstacle costs **one life**.
+- The player starts with **3 lives**.
+- A short collision cooldown prevents a single collision from immediately removing multiple lives.
+- Obstacles do not spawn directly on top of the player's starting position.
 
-## Getting Started
+### ⏱️ Timed Round
 
-### Setup
+- Each round has a **30-second time limit**.
+- The remaining time is displayed during gameplay.
+- The round ends when:
+  - All coins have been collected.
+  - The 30-second timer reaches zero.
+  - The player loses all lives.
 
-1. Make sure you have Python 3.10+ installed.
-2. Install dependencies:
+### 🏆 Final Score
+
+When all coins are collected, the final score is calculated using:
+
+```text
+Final Score = (Score / Time Taken) × 100
+```
+
+For example:
+
+```text
+Score = 24
+Time Taken = 12 seconds
+
+Final Score = (24 / 12) × 100
+            = 200
+```
+
+A faster completion time therefore results in a higher final score.
+
+If the round ends because of the timer or because the player loses all lives, the game also displays the final score.
+
+### 🔄 Restart
+
+After a round ends:
+
+```text
+Press R to start a new round
+```
+
+Starting a new round resets:
+
+- Score
+- Lives
+- Timer
+- Coins
+- Obstacles
+- Player position
+- Final score
+
+## Controls
+
+| Key | Action |
+|---|---|
+| ↑ | Move up |
+| ↓ | Move down |
+| ← | Move left |
+| → | Move right |
+| R | Restart after game over |
+
+## Project Structure
+
+```text
+06_coin_collector/
+│
+├── coin-collector/
+│   ├── game/
+│   │   ├── coin.py
+│   │   ├── collection.py
+│   │   ├── game_engine.py
+│   │   ├── player.py
+│   │   └── renderer.py
+│   │
+│   ├── main.py
+│   └── requirements.txt
+│
+└── README.md
+```
+
+### Main Components
+
+**`game/coin.py`**
+
+Defines the different coin types, their values, colors, and collision rectangles.
+
+**`game/collection.py`**
+
+Handles collision detection between the player and coins.
+
+**`game/game_engine.py`**
+
+Controls the main game logic, including:
+
+- Player movement
+- Coin spawning
+- Coin collection
+- Score
+- Obstacles
+- Lives
+- Timer
+- Round state
+- Final score
+- Restarting rounds
+
+**`game/player.py`**
+
+Defines the player and handles player movement and boundaries.
+
+**`game/renderer.py`**
+
+Handles drawing:
+
+- Player
+- Coins
+- Obstacles
+- Score
+- Lives
+- Timer
+- Game-over screen
+
+**`main.py`**
+
+Runs the Pygame application and game loop.
+
+## Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/ThejasBG/06_coin_collector.git
+```
+
+Enter the project directory:
+
+```bash
+cd 06_coin_collector/coin-collector
+```
+
+Install the dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-3. Run the game:
+Run the game:
 
 ```bash
 python main.py
 ```
 
-**Controls:** Arrow keys to move.
+## Implementation Checklist
 
----
+### Task 1 — Fix Coin Collection
 
-## Tasks to Complete
+- [x] Detect when the player touches a coin
+- [x] Award the coin's value
+- [x] Remove the collected coin
+- [x] Prevent the same coin from being scored repeatedly
+- [x] Verify that standing on a coin does not continuously increase the score
 
-Each task must be completed using an iterative process involving LLM
-suggestions and your critical code review.
+### Task 2 — Multiple Coin Types
 
-### Task 1: Fix the coin-collection bug
+- [x] Implement bronze coins
+- [x] Implement silver coins
+- [x] Implement gold coins
+- [x] Bronze = 1 point
+- [x] Silver = 3 points
+- [x] Gold = 5 points
+- [x] Give each type a distinct color
+- [x] Award the correct value for each coin
 
-> A coin is supposed to be collected exactly once, the moment the
-> player touches it. In the current build, `update()` (in
-> `game/game_engine.py`) calls `check_collection` every frame and adds
-> a coin's value to the score for as long as the player's rectangle
-> keeps overlapping it - but the coin is never actually removed after
-> being collected. Just walking through a single coin at normal speed
-> (without stopping) scores it more than a dozen times in one pass.
-> Fix it so each coin is collected exactly once, no matter how long
-> the player stands on or walks through it.
+### Task 3 — Obstacles
 
-### Task 2: Implement multiple coin types
+- [x] Add obstacles to the play area
+- [x] Keep obstacles within the play area
+- [x] Prevent obstacles from spawning directly on the player
+- [x] Detect player-obstacle collisions
+- [x] Remove one life when an obstacle is hit
+- [x] Add collision cooldown
+- [x] End the round when all lives are lost
 
-> Introduce at least three coin types with different values - for
-> example bronze (1 point), silver (3 points), and gold (5 points).
-> Give each type its own color so they're visually distinguishable,
-> and make sure the correct value is awarded when each type is
-> collected.
+### Task 4 — Timed Round
 
-### Task 3: Implement obstacles
+- [x] Add a 30-second countdown
+- [x] Display remaining time
+- [x] End the round when the timer reaches zero
+- [x] End the round when all coins are collected
+- [x] End the round when all lives are lost
+- [x] Calculate the final score
+- [x] Display the final score
+- [x] Allow the player to restart with `R`
+- [x] Reset score, lives, timer, coins, obstacles, and player position
 
-> Add obstacles to the play area that the player must avoid while
-> collecting coins. Colliding with an obstacle should have a clearly
-> defined consequence (for example, losing a life). Obstacles should
-> stay within the play area and interact correctly with the player.
+## Completion Status
 
-### Task 4: Implement a timed round
+| Task | Status |
+|---|---|
+| Coin collection bug | ✅ Complete |
+| Multiple coin types | ✅ Complete |
+| Obstacles and lives | ✅ Complete |
+| 30-second timer | ✅ Complete |
+| Final score calculation | ✅ Complete |
+| Restart system | ✅ Complete |
 
-> Add a 30-second countdown for the round. Display the remaining time
-> on screen. Once it reaches zero (or lives run out, once Task 3 is
-> done), stop the round, show the final score clearly, and provide a
-> way to start a new round with the score, lives, and timer all reset.
-
----
-
-## Expected Behavior
-
-- Walking through or standing on a coin should collect it exactly
-  once - the score should not keep climbing the whole time the player
-  happens to be touching it.
-- Coin types are visually distinguishable and award the correct value.
-- Touching an obstacle has a real, clearly defined consequence, but a
-  single touch shouldn't repeatedly punish the player every frame
-  they're still overlapping it.
-- The round ends when time runs out or lives reach zero, whichever
-  comes first, with the final score shown clearly and a way to start
-  again.
-
----
-
-## Folder Structure
-
-```
-coin-collector/
-├── main.py
-├── requirements.txt
-├── game/
-│   ├── game_engine.py
-│   ├── player.py
-│   ├── coin.py
-│   ├── collection.py
-│   └── renderer.py
-└── README.md
-```
-
----
-
-## Submission Checklist
-
-Submission is only the following three things:
-
-- [ ] A 10-second video of gameplay **before** your changes, showing the bug/broken behavior
-- [ ] A 10-second video of gameplay **after** your changes, showing the bug fixed and the new features working
-- [ ] The Chat/LLM used page link, with the complete chat history
+**Project status: Complete ✅**
