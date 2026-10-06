@@ -13,8 +13,14 @@ class Player:
         self.speed = speed
 
     def move(self, dx, dy, bounds_width, bounds_height):
-        self.x = max(self.size / 2, min(bounds_width - self.size / 2, self.x + dx))
-        self.y = max(self.size / 2, min(bounds_height - self.size / 2, self.y + dy))
+        self.x = max(
+            self.size / 2,
+            min(bounds_width - self.size / 2, self.x + dx),
+        )
+        self.y = max(
+            self.size / 2,
+            min(bounds_height - self.size / 2, self.y + dy),
+        )
 
     def get_rect(self):
         return pygame.Rect(

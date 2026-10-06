@@ -1,15 +1,16 @@
 """
-collection: figures out which coins the player has collected this frame.
+collection: figures out which coins the player is touching this frame.
+
+The collection itself is applied by GameEngine.update(). Once a coin is
+returned by this function, GameEngine removes it from the active coin list,
+so it cannot be awarded again.
 """
 
 
 def check_collection(player, coins):
-    """
-    Returns the list of coins the player is currently overlapping.
-    """
+    """Return the coins currently overlapping the player."""
     player_rect = player.get_rect()
-    collected = []
-    for coin in coins:
-        if player_rect.colliderect(coin.get_rect()):
-            collected.append(coin)
-    return collected
+    return [
+        coin for coin in coins
+        if player_rect.colliderect(coin.get_rect())
+    ]
